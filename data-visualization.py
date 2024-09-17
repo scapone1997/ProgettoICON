@@ -191,18 +191,20 @@ griglia_two[2, 2].set_title('Stato di salute')
 griglia_two[2, 2].set_xlabel('Salute attuale')
 griglia_two[2, 2].set_ylabel('Conteggio')
 
+plt.tight_layout(pad=3)
+
 # TERZA FIGURA (1 grafico)
-fig3, ax3 = plt.subplots(figsize=(10, 6))
+fig3, griglia_three = plt.subplots(figsize=(10, 6))
 
 # Grafico per la distribuzione di 'absences'
-sns.histplot(dataset['absences'], bins=range(0, dataset['absences'].max() + 1), kde=False, ax=ax3)
-ax3.set_title('Assenze scolastiche')
-ax3.set_xlabel('Assenze')
-ax3.set_ylabel('Conteggio')
-ax3.set_xticks(range(0, dataset['absences'].max() + 1, 5))
+sns.histplot(dataset['absences'], bins=range(0, dataset['absences'].max() + 1), kde=False, ax=griglia_three)
+griglia_three.set_title('Assenze scolastiche')
+griglia_three.set_xlabel('Assenze')
+griglia_three.set_ylabel('Conteggio')
+griglia_three.set_xticks(range(0, dataset['absences'].max() + 1, 5))
 
 # Aggiungere un po' di spazio tra i grafici per la seconda figura
-plt.tight_layout(pad=3)
+
 
 # Mostrare i grafici
 plt.show()
