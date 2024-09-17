@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Leggi i due dataset (sostituisci con i percorsi corretti dei tuoi file CSV)
-df_mat = pd.read_csv('student-mat.csv')
-df_por = pd.read_csv('student-por.csv')
+df_mat = pd.read_csv('dataset/student-mat.csv')
+df_por = pd.read_csv('dataset/student-por.csv')
 
 # Concatenare i due dataset (unione delle righe)
 df_combined = pd.concat([df_mat, df_por], ignore_index=True)
