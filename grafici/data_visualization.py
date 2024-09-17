@@ -193,20 +193,26 @@ def visualizza_dati_da_csv(nome_file: str):
     griglia_two[2, 2].set_xlabel('Salute attuale')
     griglia_two[2, 2].set_ylabel('Conteggio')
 
-    plt.tight_layout(pad=3)
+    # Definisci i bin per gli intervalli 0-5, 5-10, 10-15, 15-20, 20+
+    bins = [0, 5, 10, 15, 20, dataset['absences'].max() + 1]
+    labels = ['0-5', '5-10', '10-15', '15-20', '20+']
 
-    # TERZA FIGURA (1 grafico)
-    fig3, griglia_three = plt.subplots(figsize=(10, 6))
+    # Crea una colonna con i dati raggruppati negli intervalli definiti
+    dataset['absences_grouped'] = pd.cut(dataset['absences'], bins=bins, labels=labels, right=False)
 
     # Grafico per la distribuzione di 'absences'
-    sns.histplot(dataset['absences'], bins=range(0, dataset['absences'].max() + 1), kde=False, ax=griglia_three)
-    griglia_three.set_title('Assenze scolastiche')
-    griglia_three.set_xlabel('Assenze')
-    griglia_three.set_ylabel('Conteggio')
-    griglia_three.set_xticks(range(0, dataset['absences'].max() + 1, 5))
+    sns.countplot(x='absences_grouped', data=dataset, ax=griglia_two[2,3])
+
+    # Imposta il titolo e le etichette
+    griglia_two[2,3].set_title('Assenze scolastiche')
+    griglia_two[2,3].set_xlabel('Assenze')
+    griglia_two[2,3].set_ylabel('Conteggio')
 
     # Aggiungere un po' di spazio tra i grafici per la seconda figura
+    plt.tight_layout(pad=3)
 
+    # Mostra il grafico
+    plt.show()
 
     # Mostrare i grafici
     plt.show()
