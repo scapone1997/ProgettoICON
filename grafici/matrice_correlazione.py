@@ -1,47 +1,38 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import OneHotEncoder
 
+# Carica il dataset dal file CSV
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student_combined.csv')
 
-def visualizza_matrice_correlazione(nome_file_csv):
-    # Carica il dataset
-    dataset = pd.read_csv(nome_file_csv)
+# Mappare le variabili categoriche binarie su valori numerici
+binary_mappings = {
+    'school': {'GP': 0, 'MS': 1},
+    'sex': {'F': 0, 'M': 1},
+    'address': {'R': 0, 'U': 1},
+    'famsize': {'GT3': 0, 'LE3': 1},
+    'Pstatus': {'T': 0, 'A': 1},
+    'schoolsup': {'yes': 1, 'no': 0},
+    'famsup': {'yes': 1, 'no': 0},
+    'paid': {'yes': 1, 'no': 0},
+    'activities': {'yes': 1, 'no': 0},
+    'nursery': {'yes': 1, 'no': 0},
+    'higher': {'yes': 1, 'no': 0},
+    'internet': {'yes': 1, 'no': 0},
+    'romantic': {'yes': 1, 'no': 0}
+}
 
-    # Separa colonne numeriche e categoriali
-    colonne_numeriche = dataset.select_dtypes(include=['number'])
-    colonne_non_numeriche = dataset.select_dtypes(include=['object'])
+# Applicare le mappature binarie
+df.replace(binary_mappings, inplace=True)
 
-    # Stampa le colonne numeriche e categoriali
-    print("Colonne numeriche:")
-    print(colonne_numeriche.head())  # Mostra le prime 5 righe delle colonne numeriche
+# Convertire le variabili categoriche con più classi usando One-Hot Encoding
+df = pd.get_dummies(df, columns=['Mjob', 'Fjob', 'reason', 'guardian'], drop_first=True)
 
-    print("\nColonne categoriali:")
-    print(colonne_non_numeriche.head())  # Mostra le prime 5 righe delle colonne categoriali
+# Calcolare la matrice di correlazione
+correlation_matrix = df.corr()
 
-    # Codifica le colonne categoriali e le aggiunge al dataset
-    dataset_completo = _codifica_colonne_categoriali(colonne_numeriche, colonne_non_numeriche)
-
-    # Visualizza la matrice di correlazione
-    _plot_heatmap_correlazione(dataset_completo.corr(), 'Matrice di Correlazione')
-
-
-def _codifica_colonne_categoriali(colonne_numeriche, colonne_non_numeriche):
-    """Codifica le colonne categoriali usando OneHotEncoder e le concatena alle colonne numeriche."""
-    encoder = OneHotEncoder(drop='first')
-    colonne_categoriali_encoded = encoder.fit_transform(colonne_non_numeriche).toarray()
-    colonne_categoriali_df = pd.DataFrame(colonne_categoriali_encoded,
-                                          columns=encoder.get_feature_names_out(colonne_non_numeriche.columns))
-    return pd.concat([colonne_numeriche, colonne_categoriali_df], axis=1)
-
-
-def _plot_heatmap_correlazione(matrice_correlazione, titolo):
-    """Crea una heatmap per visualizzare la matrice di correlazione."""
-    plt.figure(figsize=(12, 10))
-    sns.heatmap(matrice_correlazione, annot=True, fmt=".2f", cmap='coolwarm', vmin=-1, vmax=1, linewidths=0.5)
-    plt.title(titolo)
-    plt.show()
-
-
-# Esempio di utilizzo
-visualizza_matrice_correlazione('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student_combined.csv')
+# Visualizzare la matrice di correlazione con una heatmap
+plt.figure(figsize=(16, 12))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Matrice di Correlazione')
+plt.show()
