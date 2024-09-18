@@ -62,16 +62,6 @@ r2 = r2_score(Y_test, Y_pred)
 print(f"(DECISION TREE REGRESSION) : Mean Squared Error (MSE): {mse}")
 print(f"(DECISION TREE REGRESSION) : R² Score: {r2}")
 
-# modello = RandomForestRegressor(random_state=42)
-# modello.fit(X_train_scaled, Y_train)
-# Y_pred = modello.predict(X_test_scaled)
-#
-# mse = mean_squared_error(Y_test, Y_pred)
-# r2 = r2_score(Y_test, Y_pred)
-#
-# # Stampa i risultati
-# print(f"(RANDOM FOREST REGRESSION) : Mean Squared Error (MSE): {mse}")
-# print(f"(RANDOM FOREST REGRESSION) : R² Score: {r2}")
 
 # Definisci il modello Random Forest
 rf_model = RandomForestRegressor(random_state=42)
@@ -82,7 +72,7 @@ param_grid = {
     'max_depth': [None, 10, 20, 30],
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4],
-    'max_features': ['auto', 'sqrt', 'log2']
+    'max_features': ['sqrt', 'log2', None]
 }
 
 # Configura GridSearchCV
