@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeRegressor
 from processing_dataset import prepara_dataset, separa_variabili
 
 # Carica il dataset e trasforma le colonne categoriche
-dataset_finale = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat.csv')
+dataset_finale = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat-scala10.csv')
 
 # Seleziona solo le colonne di interesse per la regressione
 colonne_interessate = ['studytime', 'absences'] + ['G1'] + ['G3']

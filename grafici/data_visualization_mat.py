@@ -1,4 +1,7 @@
 from data_visualization import visualizza_dati_da_csv
 
-# Chiama il metodo per visualizzare i dati
-visualizza_dati_da_csv('../dataset/student-mat.csv')
+# Esegui la funzione specificando il file CSV e la cartella di output
+visualizza_dati_da_csv(
+    "C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat.csv",
+    "C:/Users/simone.capone/PycharmProjects/ProgettoICON/foto/mat"
+)
