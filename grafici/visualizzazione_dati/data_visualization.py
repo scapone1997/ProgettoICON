@@ -17,7 +17,7 @@ def visualizza_dati_da_csv(nome_file: str, output_dir: str):
         ('sex', 'Sesso'),
         ('address', 'Indirizzo - Urbano (U) o Rurale (R)'),
         ('famsize', 'Numero nucleo familiare: LE3 <= 3 | GT3 > 3'),
-        ('Pstatus', 'Stato abitativo: Coi genitori (T) o Altrove (A)'),
+        ('Pstatus', 'Genitori vivono insieme?: Si (T) o No (A)'),
         ('Medu', 'Educazione madre'),
         ('Fedu', 'Educazione padre'),
         ('Mjob', 'Lavoro materno'),
