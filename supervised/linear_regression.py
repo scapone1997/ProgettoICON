@@ -16,7 +16,7 @@ colonne_categoriali = ['famsize', 'address', 'paid']
 dataset = trasforma_in_dummies(dataset, colonne_categoriali)
 
 # Seleziona solo le colonne di interesse per la regressione
-colonne_interessate = ['studytime', 'paid', 'G1'] + ['G3']
+colonne_interessate = ['studytime', 'health', 'G2'] + ['G3']
 dataset_regressione = dataset[colonne_interessate]
 
 # Statistiche descrittive del dataset
