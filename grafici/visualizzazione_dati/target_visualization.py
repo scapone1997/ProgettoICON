@@ -32,6 +32,6 @@ def visualizza_target(nome_file: str):
 
 # Chiama il metodo per visualizzare i dati
 #visualizza_target(r"C:\Users\simone.capone\PycharmProjects\ProgettoICON\dataset\student-mat.csv")
-visualizza_target(r"C:\Users\simone.capone\PycharmProjects\ProgettoICON\dataset\student-por.csv")
+visualizza_target(r"C:\Users\simone.capone\PycharmProjects\ProgettoICON\dataset\student-por-C.csv")
 
 plt.show()

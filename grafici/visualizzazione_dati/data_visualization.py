@@ -44,11 +44,6 @@ def visualizza_dati_da_csv(nome_file: str, output_dir: str):
         ('absences', 'Assenze scolastiche raggruppate')
     ]
 
-    # Definisci i bin per gli intervalli di assenze
-    bins = [0, 5, 10, 15, 20, dataset['absences'].max() + 1]
-    labels = ['0-5', '5-10', '10-15', '15-20', '20+']
-    dataset['absences_grouped'] = pd.cut(dataset['absences'], bins=bins, labels=labels, right=False)
-
     # Organizza i grafici in 5 figure, ciascuna con 6 grafici
     num_figure = 5
     grafici_per_figure = 6
@@ -69,8 +64,6 @@ def visualizza_dati_da_csv(nome_file: str, output_dir: str):
                 if colonna == 'age':  # Grafico per distribuzione di 'age'
                     sns.histplot(dataset[colonna], bins=range(dataset[colonna].min(), dataset[colonna].max() + 1), kde=False, ax=ax)
                     ax.set_xticks(range(dataset[colonna].min(), dataset[colonna].max() + 1))
-                elif colonna == 'absences':  # Grafico per assenze raggruppate
-                    sns.countplot(x='absences_grouped', data=dataset, ax=ax)
                 else:  # Grafico countplot per tutte le altre variabili
                     sns.countplot(x=colonna, data=dataset, ax=ax)
 

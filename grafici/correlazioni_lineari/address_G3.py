@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Carica il tuo dataset (sostituisci con il percorso corretto del tuo file)
-df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por.csv')
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por-C.csv')
 
 # Stampa le colonne 'address' e 'G3'
 print(df[['address', 'G3']])

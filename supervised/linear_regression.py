@@ -1,115 +1,50 @@
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeRegressor
-from processing_dataset import separa_variabili
-from supervised.processing_dataset import trasforma_in_dummies
-
-# Carica il dataset e trasforma le colonne categoriche
-dataset = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat-scalaCat.csv')
-
-colonne_categoriali = ['famsize', 'address', 'paid']
-
-dataset = trasforma_in_dummies(dataset, colonne_categoriali)
-
-# Seleziona solo le colonne di interesse per la regressione
-colonne_interessate = ['studytime', 'health', 'G2'] + ['G3']
-dataset_regressione = dataset[colonne_interessate]
-
-# Statistiche descrittive del dataset
-print(dataset_regressione.describe())
-
-print("\n")
-
-# Separo le variabili X dalla variabile target G3 .
-X, Y = separa_variabili(dataset_regressione)
-
-# 1. Dividi il dataset in training e test set (80% training, 20% test)
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 
-# 2. Standardizza le variabili indipendenti
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# Definisci la funzione per convertire G3 in voti da 1 a 4
+def convert_grade(g3):
+    if g3 <= 12:
+        return 1  # Fallimento
+    else:
+        return 0  # Successo
 
-# 3. Crea e addestra il modello di regressione lineare
-modello = LinearRegression()
-modello.fit(X_train_scaled, Y_train)
+# Carica il dataset (assicurati che 'student-mat.csv' sia nella stessa cartella dello script)
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por-C.csv')
 
-# 4. Fai previsioni sui dati di test
-Y_pred = modello.predict(X_test_scaled)
+# Applica la funzione alla colonna G3
+df['G3_grade'] = df['G3'].apply(convert_grade)
 
-# 5. Valuta il modello
-mse = mean_squared_error(Y_test, Y_pred)
-r2 = r2_score(Y_test, Y_pred)
+# Seleziona le feature e la variabile target
+features = ['address', 'famrel', 'Fedu']
+X = df[features]
+y = df['G3_grade']
 
-# Stampa i risultati
-print(f"(LINEAR REGRESSION) : Mean Squared Error (MSE): {mse}")
-print(f"(LINEAR REGRESSION) : R² Score: {r2}")
+# Codifica delle variabili categoriche
+X = X.copy()
+X['address'] = X['address'].map({'U': 0, 'R': 1})
+# X['famsize'] = X['famsize'].map({'LE3': 0, 'GT3': 1})
 
-modello = DecisionTreeRegressor(random_state=42)
-modello.fit(X_train_scaled, Y_train)
+# Divisione del dataset in training set e test set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-Y_pred = modello.predict(X_test_scaled)
+# Creazione e addestramento del modello di regressione lineare
+model = LinearRegression()
+model.fit(X_train, y_train)
 
-mse = mean_squared_error(Y_test, Y_pred)
-r2 = r2_score(Y_test, Y_pred)
+# Predizione sul test set
+y_pred = model.predict(X_test)
 
-# Stampa i risultati
-print(f"(DECISION TREE REGRESSION) : Mean Squared Error (MSE): {mse}")
-print(f"(DECISION TREE REGRESSION) : R² Score: {r2}")
+# Valutazione delle prestazioni del modello
+mse = mean_squared_error(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-# 3. Crea e addestra il modello Gradient Boosting
-gb_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
-gb_model.fit(X_train_scaled, Y_train)
-
-# 4. Fai previsioni sui dati di test
-Y_pred_gb = gb_model.predict(X_test_scaled)
-
-# 5. Valuta il modello
-mse = mean_squared_error(Y_test, Y_pred_gb)
-r2 = r2_score(Y_test, Y_pred_gb)
-
-# Stampa i risultati
-print(f"(GRADIENT BOOSTING) : Mean Squared Error (MSE): {mse}")
-print(f"(GRADIENT BOOSTING) : R² Score: {r2}")
-
-
-# # Definisci il modello Random Forest
-# rf_model = RandomForestRegressor(random_state=42)
-#
-# # Definisci la griglia di parametri da testare
-# param_grid = {
-#     'n_estimators': [100, 200, 300],
-#     'max_depth': [None, 10, 20, 30],
-#     'min_samples_split': [2, 5, 10],
-#     'min_samples_leaf': [1, 2, 4],
-#     'max_features': ['sqrt', 'log2', None]
-# }
-#
-# # Configura GridSearchCV
-# grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error', n_jobs=-1)
-#
-# # Esegui GridSearchCV
-# grid_search.fit(X_train_scaled, Y_train)
-#
-# # Ottieni il miglior modello
-# best_rf_model = grid_search.best_estimator_
-#
-# # Fai previsioni
-# Y_pred_rf = best_rf_model.predict(X_test_scaled)
-#
-# # Valuta il miglior modello
-# mse_rf = mean_squared_error(Y_test, Y_pred_rf)
-# r2_rf = r2_score(Y_test, Y_pred_rf)
-#
-# print(f"Random Forest Mean Squared Error (MSE): {mse_rf}")
-# print(f"Random Forest R² Score: {r2_rf}")
-
+print('Errore quadratico medio (MSE):', mse)
+print('Errore assoluto medio (MAE):', mae)
+print('Coefficiente di determinazione (R^2):', r2)
 
 
 
