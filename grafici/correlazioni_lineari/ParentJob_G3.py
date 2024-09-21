@@ -35,5 +35,5 @@ def plot_correlation_jobs_vs_G3(df):
 
 
 # Carica il dataset e utilizza la funzione
-df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat.csv')
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por.csv')
 plot_correlation_jobs_vs_G3(df)

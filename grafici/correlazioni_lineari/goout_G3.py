@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 
 # Carica il tuo dataset (assicurati che il percorso sia corretto)
-df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat.csv')
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por.csv')
 
 # Stampa le colonne 'goout' e 'G3'
 print(df[['goout', 'G3']])

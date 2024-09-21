@@ -11,14 +11,14 @@ import numpy as np
 df_mat = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat.csv')
 
 # Creazione della variabile target (1 se G3 >= 17, altrimenti 0)
-df_mat['high_grade'] = (df_mat['G3'] >= 17).astype(int)
+df_mat['high_grade'] = (df_mat['G3'] >= 15).astype(int)
 
 # Trasforma la variabile categorica Pstatus in numerica binaria ('T' = 1, 'A' = 0)
 df_mat['Pstatus'] = df_mat['Pstatus'].map({'T': 1, 'A': 0})
 df_mat['address'] = df_mat['address'].map({'U': 1, 'R': 0})
 
 # Seleziona le feature di interesse
-features = df_mat[['famrel', 'Pstatus', 'health', 'address']]
+features = df_mat[['famrel', 'Pstatus', 'address']]
 target = df_mat['high_grade']
 
 # Suddividi il dataset in training e test
