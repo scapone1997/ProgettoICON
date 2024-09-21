@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
@@ -58,7 +60,9 @@ print("Migliori Parametri:", grid_search.best_params_)
 best_model = grid_search.best_estimator_
 y_pred = best_model.predict(X_test)
 
-# Valutazione del modello ottimizzato
-print('Accuratezza:', accuracy_score(y_test, y_pred))
+# Valutazione del modello
+accuracy = accuracy_score(y_test, y_pred)
+accuracy_rounded = math.ceil(accuracy * 100) / 100
+print('Accuratezza:', accuracy_rounded)
 print('Report di classificazione:\n', classification_report(y_test, y_pred))
 print('Matrice di confusione:\n', confusion_matrix(y_test, y_pred))

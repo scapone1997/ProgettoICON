@@ -12,7 +12,7 @@ def convert_grade(g3):
         return 0  # Successo
 
 # Carica il dataset (assicurati che 'student-mat.csv' sia nella stessa cartella dello script)
-df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por-C.csv')
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por.csv')
 
 # Applica la funzione alla colonna G3
 df['G3_grade'] = df['G3'].apply(convert_grade)

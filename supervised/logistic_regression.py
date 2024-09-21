@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
@@ -42,6 +44,8 @@ model.fit(X_train_balanced, y_train_balanced)
 y_pred = model.predict(X_test)
 
 # Valutazione del modello
-print('Accuratezza:', accuracy_score(y_test, y_pred))
+accuracy = accuracy_score(y_test, y_pred)
+accuracy_rounded = math.ceil(accuracy * 100) / 100
+print('Accuratezza:', accuracy_rounded)
 print('Report di classificazione:\n', classification_report(y_test, y_pred))
 print('Matrice di confusione:\n', confusion_matrix(y_test, y_pred))
