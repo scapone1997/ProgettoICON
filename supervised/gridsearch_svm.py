@@ -21,7 +21,7 @@ def convert_grade(g3):
 df['G3_grade'] = df['G3'].apply(convert_grade)
 
 # Seleziona le feature e la variabile target
-features = ['address', 'famrel', 'Fedu']
+features = ['address', 'famrel', 'Fedu', 'Medu']
 X = df[features]
 y = df['G3_grade']
 
