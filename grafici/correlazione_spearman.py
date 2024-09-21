@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Carica il dataset dal file CSV
-df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por-C.csv')
+df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-mat-scala10.csv')
 
 # Mappare le variabili categoriche binarie su valori numerici
 binary_mappings = {
@@ -28,11 +28,11 @@ df.replace(binary_mappings, inplace=True)
 # Convertire le variabili categoriche con più classi usando One-Hot Encoding
 df = pd.get_dummies(df, columns=['Mjob', 'Fjob', 'reason', 'guardian'], drop_first=True)
 
-# Calcolare la matrice di correlazione
-correlation_matrix = df.corr()
+# Calcola la matrice di correlazione di Spearman
+spearman_corr = df.corr(method='spearman')
 
 # Visualizzare la matrice di correlazione con una heatmap
 plt.figure(figsize=(16, 12))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+sns.heatmap(spearman_corr, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title('Matrice di Correlazione')
 plt.show()
