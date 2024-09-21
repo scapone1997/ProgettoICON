@@ -1,7 +1,7 @@
 import math
-
 import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV
+import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold, cross_val_score
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import StandardScaler
@@ -22,7 +22,7 @@ def convert_grade(g3):
 df['G3_grade'] = df['G3'].apply(convert_grade)
 
 # Seleziona le feature e la variabile target
-features = ['famrel', 'address', 'Fedu', 'Medu']
+features = ['famrel', 'address', 'Fedu']
 X = df[features]
 y = df['G3_grade']
 
@@ -56,13 +56,22 @@ grid_search.fit(X_train_balanced, y_train_balanced)
 # Migliori parametri trovati
 print("Migliori Parametri:", grid_search.best_params_)
 
-# Uso del modello ottimizzato per fare previsioni
+# Uso del modello ottimizzato per fare previsioni sul test set
 best_model = grid_search.best_estimator_
+
+# Configura Stratified K-Fold per la cross-validation con 3 fold
+skf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+
+# Esegui la cross-validation per calcolare l'accuratezza media e deviazione standard
+scores = cross_val_score(best_model, X_train_balanced, y_train_balanced, cv=skf, scoring='accuracy')
+print(f"Accuratezza media con cross-validation: {np.mean(scores):.2f}, Deviazione standard: {np.std(scores):.2f}")
+
+# Predizione sul test set
 y_pred = best_model.predict(X_test)
 
-# Valutazione del modello
+# Valutazione del modello sul test set
 accuracy = accuracy_score(y_test, y_pred)
 accuracy_rounded = math.ceil(accuracy * 100) / 100
-print('Accuratezza:', accuracy_rounded)
+print('Accuratezza sul test set:', accuracy_rounded)
 print('Report di classificazione:\n', classification_report(y_test, y_pred))
 print('Matrice di confusione:\n', confusion_matrix(y_test, y_pred))
