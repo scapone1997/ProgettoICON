@@ -1,15 +1,18 @@
 import math
-
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import numpy as np
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from imblearn.over_sampling import SMOTE
 
 # Carica il dataset
 df = pd.read_csv('C:/Users/simone.capone/PycharmProjects/ProgettoICON/dataset/student-por-C.csv')
 
 # Definisci la funzione per convertire G3 in voti da 0 (successo) a 1 (fallimento)
 def convert_grade(g3):
-    if g3 <= 12:
+    if g3 <= 14:
         return 1  # Fallimento
     else:
         return 0  # Successo
@@ -23,47 +26,40 @@ X = df[features]
 y = df['G3_grade']
 
 # Codifica delle variabili categoriche
-X = X.copy()
 X['address'] = X['address'].map({'U': 0, 'R': 1})
 
 # Standardizzazione delle feature (necessaria per SVM)
-from sklearn.preprocessing import StandardScaler
-
 scaler = StandardScaler()
 X[['famrel']] = scaler.fit_transform(X[['famrel']])
 
 # Divisione del dataset in training set e test set con stratificazione
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, stratify=y, random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
 
 # Bilanciamento del dataset con SMOTE
-from imblearn.over_sampling import SMOTE
-
 smote = SMOTE(random_state=42)
 X_train_balanced, y_train_balanced = smote.fit_resample(X_train, y_train)
 
 # Modello di classificazione - Support Vector Machine
-from sklearn.svm import SVC
-
 model = SVC(kernel='rbf', probability=True, random_state=42)
+
+# Configura Stratified K-Fold per la cross-validation con 3 fold
+skf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+
+# Esegui la cross-validation per calcolare l'accuratezza
+scores = cross_val_score(model, X_train_balanced, y_train_balanced, cv=skf, scoring='accuracy')
+
+# Stampa i risultati della cross-validation
+print(f"Accuratezza media con cross-validation: {np.mean(scores):.2f}, Deviazione standard: {np.std(scores):.2f}")
+
+# Addestra il modello con tutti i dati di addestramento bilanciati
 model.fit(X_train_balanced, y_train_balanced)
 
 # Predizione sul test set
 y_pred = model.predict(X_test)
 
-# Valutazione del modello
+# Valutazione del modello sul test set
 accuracy = accuracy_score(y_test, y_pred)
 accuracy_rounded = math.ceil(accuracy * 100) / 100
-print('Accuratezza:', accuracy_rounded)
+print('Accuratezza sul test set:', accuracy_rounded)
 print('Report di classificazione:\n', classification_report(y_test, y_pred))
 print('Matrice di confusione:\n', confusion_matrix(y_test, y_pred))
-
-#
-# Un'accuratezza di 0.74 (74%) è considerata buona, soprattutto per un'analisi
-# basata esclusivamente su fattori sociali come la vicinanza alla scuola,
-# l'educazione del padre, e le relazioni familiari. Questo risultato indica
-# che il modello riesce a catturare significative correlazioni tra il contesto
-# sociale degli studenti e il loro successo o insuccesso scolastico, senza fare
-# uso diretto di informazioni accademiche come i voti o le assenze.
-#
